@@ -4,38 +4,27 @@
 // but you don't so you're going to write it from scratch:
 
 var stringifyJSON = function(obj) {
-  var string = '';
-  
-  // IF OBJECT IS ARRAY
-  
-  if (Array.isArray(obj)) {
-  	string = '[';
-  	for (var i = 0; i < obj.length; i++) {
-  		// Check for nested Array
-  		if (Array.isArray(obj[i])) {
-  			stringifyJSON(obj[i]);
-  		}
-  		// Check for object already a string
-  		else if (typeof obj[i] === 'string') {
-  			string += ('"' + obj[i] + '"');
-  		} 
-  		// Check for multiple objects in array
-  		else if (obj[i+1] || typeof obj[i+1] === 'number' && obj[i+1] === 0) {
-  			string += obj[i] + ',';
-  		}
-  		//Otherwise add value to the string 
-  		else {
-  			string += obj[i];
-  		}
-  	}
-  	return string + ']';
-  }
-  
-  // IF OBJECT IS A VALUE
-  if (typeof obj === 'string') {
-  	return '"' + obj + '"';
-  } else {
-  	return string + obj;
-  }
-  
+
+	var convertToString = '';
+
+	if (Array.isArray(obj)) {
+	    var mapped = obj.map(function(item) {
+	    	return stringifyJSON(item);
+	    });
+	    return '[' + mapped + ']';
+	  }
+	  if (obj && typeof(obj) === 'object') {
+	    var strings = [];
+	    for (var key in obj) {
+	      if (obj[key] === undefined || typeof(obj[key]) === 'function') {
+	         break;
+	      }
+	      strings.push(stringifyJSON(key) + ':' + stringifyJSON(obj[key]));
+	    }
+	    return '{' + strings.join() + '}';
+	  }
+	  if (typeof(obj) === 'string') {
+	    return '"' + obj + '"';
+	  }
+	  return convertToString + obj;
 };
