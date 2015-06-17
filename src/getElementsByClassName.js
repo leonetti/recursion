@@ -24,6 +24,6 @@ var getElementsByClassName = function(className){
 		    }
 		}
 	}
-	checkNestedTags(document.body, elements, className);
+	checkNestedTags(document, elements, className); // why does document work but not document.body???
 	return elements;
 };
